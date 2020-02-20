@@ -10,12 +10,14 @@
 #include "getset.h"
 #include "apu/apu.h"
 
-// for "Magic WDM" features
 #ifdef DEBUGGER	
+// for "Magic WDM" features
 #include "snapshot.h"
 #include "display.h"
 #include "debug.h"
 #include "missing.h"
+
+#include "codedatalogger.h"
 #endif
 
 #ifdef SA1_OPCODES

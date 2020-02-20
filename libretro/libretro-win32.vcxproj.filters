@@ -212,6 +212,9 @@
     <ClCompile Include="..\clip.cpp">
       <Filter>s9x-source</Filter>
     </ClCompile>
+    <ClCompile Include="..\codedatalogger.cpp">
+      <Filter>s9x-source</Filter>
+    </ClCompile>
     <ClCompile Include="..\conffile.cpp">
       <Filter>s9x-source</Filter>
     </ClCompile>

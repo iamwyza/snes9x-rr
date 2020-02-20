@@ -335,6 +335,7 @@
     <CustomBuild Include="..\dma.h" />
     <CustomBuild Include="..\dsp.h" />
     <ClInclude Include="..\apu\resampler.h" />
+    <ClInclude Include="..\codedatalogger.h" />
     <ClInclude Include="..\filter\2xsai.h" />
     <ClInclude Include="..\filter\blit.h" />
     <ClInclude Include="..\filter\epx.h" />
@@ -474,6 +475,7 @@
     <ClCompile Include="..\cheats.cpp" />
     <ClCompile Include="..\cheats2.cpp" />
     <ClCompile Include="..\clip.cpp" />
+    <ClCompile Include="..\codedatalogger.cpp" />
     <ClCompile Include="..\conffile.cpp" />
     <ClCompile Include="..\controls.cpp" />
     <ClCompile Include="..\cpu.cpp" />

@@ -15,6 +15,10 @@
 #include "bsx.h"
 #include "msu1.h"
 
+#ifdef DEBUGGER
+#include "codedatalogger.h"
+#endif
+
 #define addCyclesInMemoryAccess \
 	if (!CPU.InDMAorHDMA) \
 	{ \
@@ -849,3 +853,15 @@ uint8 * S9xGetMemPointer (uint32 Address)
 			return (NULL);
 	}
 }
+
+#ifdef DEBUGGER
+void S9xSetCDLFlags (uint8* mem, eCDLog_Flags flags)
+{
+	if (mem >= Memory.ROM && mem < Memory.ROM + CMemory::MAX_ROM_SIZE)
+		CDL.Set(eCDLog_AddrType_CARTROM, flags, mem - Memory.ROM);
+	else if (mem >= Memory.SRAM && mem < Memory.SRAM + 0x20000)
+		CDL.Set(eCDLog_AddrType_CARTRAM, flags, mem - Memory.SRAM);
+	else if (mem >= Memory.RAM && mem < Memory.RAM + 0x20000)
+		CDL.Set(eCDLog_AddrType_WRAM, flags, mem - Memory.RAM);
+}
+#endif

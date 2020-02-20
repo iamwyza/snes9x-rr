@@ -40,7 +40,6 @@
 #include "../memmap.h"
 #include "../cpuexec.h"
 #include "../display.h"
-#include "../gfx.h"
 #include "../cheats.h"
 #include "../netplay.h"
 #include "../apu/apu.h"
@@ -55,6 +54,7 @@
 
 #ifdef DEBUGGER
 #include "../debug.h"
+#include "../codedatalogger.h"
 #endif
 
 #if (((defined(_MSC_VER) && _MSC_VER >= 1300)) || defined(__MINGW32__))
@@ -2271,7 +2271,66 @@ LRESULT CALLBACK WinProc(
 		case ID_DEBUG_TRACE:
 			S9xDebugProcessCommand("T");
 			break;
+		case ID_DEBUG_CODE_DATA_LOGGER:
+			if (Settings.StopEmulation) break;
+#if false
+		{
+			// import
+				OPENFILENAME  ofn;
+				TCHAR  szFileName[MAX_PATH];
+				TCHAR  szPathName[MAX_PATH];
+				lstrcpy(szFileName, TEXT(""));
+				_tfullpath(szPathName, S9xGetDirectoryT(LOG_DIR), MAX_PATH);
 
+				memset((LPVOID)&ofn, 0, sizeof(OPENFILENAME));
+				ofn.lStructSize = sizeof(OPENFILENAME);
+				ofn.hwndOwner = GUI.hWnd;
+				ofn.lpstrFilter = TEXT("Code Data Logger Files (*.cdl)") TEXT("\0*.cdl\0") FILE_INFO_ANY_FILE_TYPE TEXT("\0*.*\0\0");
+				ofn.lpstrFile = szFileName;
+				ofn.lpstrDefExt = TEXT("cdl");
+				ofn.nMaxFile = MAX_PATH;
+				ofn.Flags = OFN_HIDEREADONLY | OFN_FILEMUSTEXIST;
+				ofn.lpstrInitialDir = szPathName;
+				if (GetOpenFileName(&ofn))
+				{
+					if (CDL.Load(_tToChar(szFileName)))
+					{
+						MessageBox(hWnd, _T("CDL file loaded"), WINDOW_TITLE, MB_ICONINFORMATION);
+					}
+					else
+					{
+						MessageBox(hWnd, _T("Failed to load CDL"), WINDOW_TITLE, MB_ICONERROR);
+					}
+				}
+		}
+#endif
+
+		{
+			// save
+			OPENFILENAME  ofn;
+			TCHAR  szFileName[MAX_PATH];
+			TCHAR  szPathName[MAX_PATH];
+			lstrcpy(szFileName, TEXT(""));
+			_tfullpath(szPathName, S9xGetDirectoryT(LOG_DIR), MAX_PATH);
+
+			memset((LPVOID)&ofn, 0, sizeof(OPENFILENAME));
+			ofn.lStructSize = sizeof(OPENFILENAME);
+			ofn.hwndOwner = GUI.hWnd;
+			ofn.lpstrFilter = TEXT("Code Data Logger Files (*.cdl)") TEXT("\0*.cdl\0") FILE_INFO_ANY_FILE_TYPE TEXT("\0*.*\0\0");
+			ofn.lpstrFile = szFileName;
+			ofn.lpstrDefExt = TEXT("cdl");
+			ofn.nMaxFile = MAX_PATH;
+			ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+			ofn.lpstrInitialDir = szPathName;
+			if (GetSaveFileName(&ofn))
+			{
+				if (!CDL.Save(_tToChar(szFileName))) {
+					MessageBox(hWnd, _T("Failed to save CDL"), WINDOW_TITLE, MB_ICONERROR);
+				}
+			}
+		}
+
+			break;
 		case ID_DEBUG_FRAME_ADVANCE:
 			CPU.Flags |= FRAME_ADVANCE_FLAG;
 			ICPU.FrameAdvanceCount = 1;
@@ -2666,6 +2725,7 @@ BOOL WinInit( HINSTANCE hInstance)
 	if(GUI.hMenu) {
 		InsertMenu(GUI.hMenu,ID_OPTIONS_SETTINGS,MF_BYCOMMAND | MF_STRING | MF_ENABLED,ID_DEBUG_FRAME_ADVANCE,TEXT("&Debug Frame Advance"));
 		InsertMenu(GUI.hMenu,ID_OPTIONS_SETTINGS,MF_BYCOMMAND | MF_STRING | MF_ENABLED,ID_DEBUG_TRACE,TEXT("&Trace"));
+		InsertMenu(GUI.hMenu,ID_OPTIONS_SETTINGS,MF_BYCOMMAND | MF_STRING | MF_ENABLED,ID_DEBUG_CODE_DATA_LOGGER,TEXT("Code-Data Logger"));
 		InsertMenu(GUI.hMenu,ID_OPTIONS_SETTINGS,MF_BYCOMMAND | MF_STRING | MF_ENABLED,ID_DEBUG_APU_TRACE,TEXT("&APU Trace"));
 		InsertMenu(GUI.hMenu,ID_OPTIONS_SETTINGS,MF_BYCOMMAND | MF_SEPARATOR | MF_ENABLED,NULL,NULL);
 	}
@@ -3935,6 +3995,7 @@ static void CheckMenuStates ()
 #ifdef DEBUGGER
     mii.fState = (CPU.Flags & TRACE_FLAG) ? MFS_CHECKED : MFS_UNCHECKED;
     SetMenuItemInfo (GUI.hMenu, ID_DEBUG_TRACE, FALSE, &mii);
+    SetMenuItemInfo (GUI.hMenu, ID_DEBUG_CODE_DATA_LOGGER, FALSE, &mii);
 	// TODO: reactivate once APU debugger works again
 	//mii.fState = (spc_core->debug_is_enabled()) ? MFS_CHECKED : MFS_UNCHECKED;
 	mii.fState = MFS_UNCHECKED;

@@ -22,6 +22,9 @@ static inline uint8 Immediate8Slow (AccessMode a)
 	uint8	val = S9xGetByte(Registers.PBPC);
 	if (a & READ)
 		OpenBus = val;
+#ifdef DEBUGGER
+	S9xSetCDLFlags(S9xGetMemPointer(Registers.PBPC), eCDLog_Flags_ExecOperand);
+#endif
 	Registers.PCw++;
 
 	return (val);
@@ -33,6 +36,9 @@ static inline uint8 Immediate8 (AccessMode a)
 	if (a & READ)
 		OpenBus = val;
 	AddCycles(CPU.MemSpeed);
+#ifdef DEBUGGER
+	S9xSetCDLFlags(&CPU.PCBase[Registers.PCw], eCDLog_Flags_ExecOperand);
+#endif
 	Registers.PCw++;
 
 	return (val);
@@ -43,6 +49,12 @@ static inline uint16 Immediate16Slow (AccessMode a)
 	uint16	val = S9xGetWord(Registers.PBPC, WRAP_BANK);
 	if (a & READ)
 		OpenBus = (uint8) (val >> 8);
+#ifdef DEBUGGER
+	PC_t	pc = Registers.PC;
+	S9xSetCDLFlags(S9xGetMemPointer(pc.xPBPC), eCDLog_Flags_ExecOperand);
+	pc.W.xPC++;
+	S9xSetCDLFlags(S9xGetMemPointer(pc.xPBPC), eCDLog_Flags_ExecOperand);
+#endif
 	Registers.PCw += 2;
 
 	return (val);
@@ -54,6 +66,10 @@ static inline uint16 Immediate16 (AccessMode a)
 	if (a & READ)
 		OpenBus = (uint8) (val >> 8);
 	AddCycles(CPU.MemSpeedx2);
+#ifdef DEBUGGER
+	S9xSetCDLFlags(CPU.PCBase + Registers.PCw, eCDLog_Flags_ExecOperand);
+	S9xSetCDLFlags(CPU.PCBase + Registers.PCw + 1, eCDLog_Flags_ExecOperand);
+#endif
 	Registers.PCw += 2;
 
 	return (val);
@@ -199,6 +215,11 @@ static inline uint32 AbsoluteLong (AccessMode a)						// l
 	AddCycles(CPU.MemSpeedx2 + CPU.MemSpeed);
 	if (a & READ)
 		OpenBus = addr >> 16;
+#ifdef DEBUGGER
+	S9xSetCDLFlags(CPU.PCBase + Registers.PCw, eCDLog_Flags_ExecOperand);
+	S9xSetCDLFlags(CPU.PCBase + Registers.PCw + 1, eCDLog_Flags_ExecOperand);
+	S9xSetCDLFlags(CPU.PCBase + Registers.PCw + 2, eCDLog_Flags_ExecOperand);
+#endif
 	Registers.PCw += 3;
 
 	return (addr);

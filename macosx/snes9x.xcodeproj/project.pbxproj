@@ -70,6 +70,7 @@
 		30D15D3022CE6B74005BC352 /* cheats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE061630526CCB900A80003 /* cheats.cpp */; };
 		30D15D3122CE6B74005BC352 /* cheats2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE061650526CCB900A80003 /* cheats2.cpp */; };
 		30D15D3222CE6B74005BC352 /* clip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE061660526CCB900A80003 /* clip.cpp */; };
+		30D15DEB22CE6FE1005BC352 /* codedatalogger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE061ED0526CCB900A80003 /* codedatalogger.cpp */; };
 		30D15D3322CE6B74005BC352 /* controls.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EA809E9908F8D7240072CDFB /* controls.cpp */; };
 		30D15D3422CE6B74005BC352 /* cpu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE061690526CCB900A80003 /* cpu.cpp */; };
 		30D15D3522CE6B74005BC352 /* cpuexec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EAE0616B0526CCB900A80003 /* cpuexec.cpp */; };
@@ -395,6 +396,7 @@
 		EA809E9308F8D6C40072CDFB /* controls.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controls.h; sourceTree = "<group>"; usesTabs = 1; };
 		EA809E9508F8D6E00072CDFB /* language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = language.h; sourceTree = "<group>"; usesTabs = 1; };
 		EA809E9708F8D70D0072CDFB /* stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stream.h; sourceTree = "<group>"; usesTabs = 1; };
+		EAE061ED0526CCB900A80003 /* codedatalogger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = codedatalogger.cpp; sourceTree = "<group>"; };
 		EA809E9908F8D7240072CDFB /* controls.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = controls.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		EA809E9B08F8D72C0072CDFB /* crosshairs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crosshairs.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		EA809E9D08F8D73A0072CDFB /* crosshairs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crosshairs.h; sourceTree = "<group>"; usesTabs = 1; };
@@ -850,6 +852,7 @@
 				EAE061630526CCB900A80003 /* cheats.cpp */,
 				EAE061650526CCB900A80003 /* cheats2.cpp */,
 				EAE061660526CCB900A80003 /* clip.cpp */,
+				EAE061ED0526CCB900A80003 /* codedatalogger.cpp */,
 				EA809E9908F8D7240072CDFB /* controls.cpp */,
 				EAE061690526CCB900A80003 /* cpu.cpp */,
 				EAE0616B0526CCB900A80003 /* cpuexec.cpp */,
@@ -1241,6 +1244,7 @@
 				30D15D3022CE6B74005BC352 /* cheats.cpp in Sources */,
 				30D15D3122CE6B74005BC352 /* cheats2.cpp in Sources */,
 				30D15D3222CE6B74005BC352 /* clip.cpp in Sources */,
+				30D15DEB22CE6FE1005BC352 /* codedatalogger.cpp in Sources */,
 				30D15D3322CE6B74005BC352 /* controls.cpp in Sources */,
 				3082C4262378BCE80081CA7C /* FakeResources.c in Sources */,
 				30D15D3422CE6B74005BC352 /* cpu.cpp in Sources */,

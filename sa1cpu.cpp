@@ -163,6 +163,10 @@ void S9xSA1MainLoop (void)
 			Opcodes = S9xSA1OpcodesSlow;
 		}
 
+#ifdef DEBUGGER
+		S9xSetCDLFlags(S9xGetMemPointer(SA1Registers.PBPC), eCDLog_Flags(int(eCDLog_Flags_ExecFirst) | (SA1Registers.PL & 0x30)));
+#endif
+
 		Registers.PCw++;
 		(*Opcodes[Op].S9xOpcode)();
 	}

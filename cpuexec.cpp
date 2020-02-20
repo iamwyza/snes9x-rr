@@ -17,6 +17,7 @@
 #include "sa1.h"
 #ifdef DEBUGGER
 #include "debug.h"
+#include "codedatalogger.h"
 #include "missing.h"
 #endif
 
@@ -169,6 +170,10 @@ void S9xMainLoop (void)
 			if (oldPCBase != CPU.PCBase || (Registers.PCw & ~MEMMAP_MASK) == (0xffff & ~MEMMAP_MASK))
 				Opcodes = S9xOpcodesSlow;
 		}
+
+#ifdef DEBUGGER
+		S9xSetCDLFlags(S9xGetMemPointer(Registers.PBPC), eCDLog_Flags(int(eCDLog_Flags_ExecFirst) | (Registers.PL & 0x30)));
+#endif
 
 		Registers.PCw++;
 		(*Opcodes[Op].S9xOpcode)();

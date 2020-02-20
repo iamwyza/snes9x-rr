@@ -26,6 +26,7 @@
 #endif
 #ifdef DEBUGGER
 #include "debug.h"
+#include "codedatalogger.h"
 #include "missing.h"
 #endif
 
@@ -66,6 +67,7 @@ struct SNetPlay			NetPlay;
 #endif
 #ifdef DEBUGGER
 struct Missing			missing;
+struct CCodeDataLog		CDL;
 #endif
 struct SCheatData		Cheat;
 struct Watch			watches[16];

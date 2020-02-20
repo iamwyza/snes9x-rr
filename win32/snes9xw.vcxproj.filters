@@ -288,6 +288,9 @@
     <ClInclude Include="CSaveLoadWithPreviewDlg.h">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\codedatalogger.h">
+      <Filter>Emu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\bsx.cpp">
@@ -634,6 +637,9 @@
     </ClCompile>
     <ClCompile Include="CSaveLoadWithPreviewDlg.cpp">
       <Filter>GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\codedatalogger.cpp">
+      <Filter>Emu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

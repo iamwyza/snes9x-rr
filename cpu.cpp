@@ -26,6 +26,7 @@
 #include "logger.h"
 #ifdef DEBUGGER
 #include "debug.h"
+#include "codedatalogger.h"
 #endif
 
 static void S9xResetCPU (void);
@@ -142,6 +143,10 @@ void S9xReset (void)
 		S9xMSU1Init();
 
 	S9xInitCheatData();
+
+#ifdef DEBUGGER
+	CDL.New(&Memory);
+#endif
 }
 
 void S9xSoftReset (void)

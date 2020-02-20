@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\..\clip.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\codedatalogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\conffile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

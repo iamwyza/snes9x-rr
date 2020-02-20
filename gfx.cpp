@@ -7,6 +7,7 @@
 #include "gfx.h"
 
 #include "snes9x.h"
+#include "cpuexec.h"
 #include "memmap.h"
 #include "ppu.h"
 #include "tile.h"

@@ -9,6 +9,10 @@
 
 #include "port.h"
 
+#ifdef DEBUGGER
+#include "codedatalogger.h"
+#endif
+
 enum s9xwrap_t
 {
 	WRAP_NONE,
@@ -30,5 +34,9 @@ void S9xSetWord(uint16 Word, uint32 Address, enum s9xwrap_t w = WRAP_NONE, enum 
 void S9xSetPCBase(uint32 Address);
 uint8 * S9xGetBasePointer(uint32 Address);
 uint8 * S9xGetMemPointer(uint32 Address);
+
+#ifdef DEBUGGER
+void S9xSetCDLFlags (uint8* mem, eCDLog_Flags flags);
+#endif
 
 #endif
