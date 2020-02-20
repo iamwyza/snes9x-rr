@@ -41,7 +41,7 @@ bool readLeb128(FILE* fp, unsigned int* value) {
 }
 
 bool expectString(FILE* fp, const char* value) {
-  size_t size = 0;
+  unsigned int size = 0;
   if (!readLeb128(fp, &size)) return false;
   if (strlen(value) != size) return false;
 
@@ -52,7 +52,7 @@ bool expectString(FILE* fp, const char* value) {
 }
 
 bool readString(FILE* fp, char* buffer, size_t capacity) {
-  size_t size = 0;
+  unsigned int size = 0;
   if (!readLeb128(fp, &size)) return false;
   if (capacity <= size) return false;
 
