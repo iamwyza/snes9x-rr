@@ -4,7 +4,10 @@
    For further information, consult the LICENSE file in the root directory.
 \*****************************************************************************/
 
+#include "gfx.h"
+
 #include "snes9x.h"
+#include "memmap.h"
 #include "ppu.h"
 #include "tile.h"
 #include "controls.h"
