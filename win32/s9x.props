@@ -5,7 +5,11 @@
     <XPDeprecationWarning>False</XPDeprecationWarning>
   </PropertyGroup>
   <PropertyGroup />
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>DEBUGGER;_USING_V110_SDK71_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="XPDeprecationWarning">
       <Value>$(XPDeprecationWarning)</Value>
