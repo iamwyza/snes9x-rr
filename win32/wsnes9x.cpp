@@ -1519,6 +1519,7 @@ void ClientToSNESScreen(LPPOINT lpPoint, bool clip)
 				ydiff >>= 1;
 			}
 		}
+		if (width == 0) width = 1;
 		lpPoint->x=(client.x-xdiff)*sizex/width;
 		lpPoint->y=(client.y-ydiff)*sizey/height;
 	}

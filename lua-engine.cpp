@@ -17,6 +17,7 @@
 #include <string>
 #include <algorithm>
 #include "zlib.h"
+#include "apu/apu.h"
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -1041,7 +1042,47 @@ DEFINE_LUA_FUNCTION(print, "...")
 	return 0;
 }
 
+DEFINE_LUA_FUNCTION(client_getVersion, "")
+{
+	lua_settop(L, 0);
+	lua_pushstring(L, VERSION);
 
+	return 1;
+}
+
+DEFINE_LUA_FUNCTION(client_hideMessages, "[enabled]")
+{
+	LuaContextInfo& info = GetCurrentInfo();
+	if (lua_gettop(L) == 0)
+	{
+		// if no arguments given, return the current value
+		lua_pushboolean(L, Settings.DisplayHideMessages);
+		return 1;
+	}
+	else
+	{
+		// set rerecord disabling
+		Settings.DisplayHideMessages = !lua_toboolean(L, 1);
+		return 0;
+	}
+}
+
+DEFINE_LUA_FUNCTION(client_sound, "[enabled]")
+{
+	LuaContextInfo& info = GetCurrentInfo();
+	if (lua_gettop(L) == 0)
+	{
+		// if no arguments given, return the current value
+		lua_pushboolean(L, !Settings.Mute);
+		return 1;
+	}
+	else
+	{
+		// set rerecord disabling
+		S9xSetSoundMute(!lua_toboolean(L, 1));
+		return 0;
+	}
+}
 
 DEFINE_LUA_FUNCTION(emu_message, "str")
 {
@@ -1816,6 +1857,16 @@ DEFINE_LUA_FUNCTION(memory_readbyterange, "address,length")
 	}
 
 	return 1;
+}
+
+DEFINE_LUA_FUNCTION(rom_readbyte, "address")
+{
+	int address = lua_tointeger(L, 1);
+
+	uint8 value = (Memory.ROM[address]);
+	lua_settop(L, 0);
+	lua_pushinteger(L, value);
+	return 1; // we return the number of return values
 }
 
 /*DEFINE_LUA_FUNCTION(memory_isvalid, "address")
@@ -3998,20 +4049,21 @@ DEFINE_LUA_FUNCTION(emu_openscript, "filename")
 #endif
     return 0;
 }
-/*
+
 DEFINE_LUA_FUNCTION(emu_loadrom, "filename")
 {
 	struct Temp { Temp() {EnableStopAllLuaScripts(false);} ~Temp() {EnableStopAllLuaScripts(true);}} dontStopScriptsHere;
 	const char* filename = lua_isstring(L,1) ? lua_tostring(L,1) : NULL;
 	char curScriptDir[1024]; GetCurrentScriptDir(curScriptDir, 1024);
-	filename = MakeRomPathAbsolute(filename, curScriptDir);
-	int result = GensLoadRom(filename);
+	int result = Memory.LoadROM(filename);
+	Settings.StopEmulation = FALSE;
+
 	if(result <= 0)
 		luaL_error(L, "Failed to load ROM \"%s\": %s", filename, result ? "invalid or unsupported" : "cancelled or not found");
 	CallRegisteredLuaFunctions(LUACALL_ONSTART);
     return 0;
 }
-*/
+
 DEFINE_LUA_FUNCTION(emu_getframecount, "")
 {
 	int offset = 1;
@@ -4557,7 +4609,7 @@ static const struct luaL_reg emulib [] =
 	{"message", emu_message},
 	{"print", print}, // sure, why not
 	{"openscript", emu_openscript},
-//	{"loadrom", emu_loadrom},
+	{"loadrom", emu_loadrom},
 	// alternative names
 //	{"openrom", emu_loadrom},
 	{NULL, NULL}
@@ -4639,6 +4691,9 @@ static const struct luaL_reg memorylib [] =
 	{"register", memory_registerwrite},
 	{"registerrun", memory_registerexec},
 	{"registerexecute", memory_registerexec},
+
+	// ROM Reading
+	{"romreadbyte", rom_readbyte},
 
 	{NULL, NULL}
 };
@@ -4727,6 +4782,14 @@ static const struct luaL_reg movielib [] =
 	{"getname", movie_getname},
 	{"playback", movie_play},
 	{"getreadonly", movie_getreadonly},
+	{NULL, NULL}
+};
+
+static const struct luaL_reg clientlib[] =
+{
+	{"getVersion", client_getVersion},
+	{ "hideMessages", client_hideMessages},
+	{"sound", client_sound},
 	{NULL, NULL}
 };
 
@@ -4879,6 +4942,7 @@ void registerLibs(lua_State* L)
 	luaL_openlibs(L);
 
 	luaL_register(L, "emu", emulib);
+	luaL_register(L, "client", clientlib);
 	luaL_register(L, "gui", guilib);
 	//luaL_register(L, "stylus", styluslib);
 	luaL_register(L, "savestate", statelib);
@@ -4896,6 +4960,7 @@ void registerLibs(lua_State* L)
 	lua_register(L, "tostring", tostring);
 	lua_register(L, "addressof", addressof);
 	lua_register(L, "copytable", copytable);
+
 
 	// old bit operation functions
 	lua_register(L, "AND", bit_band);

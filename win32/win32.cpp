@@ -274,6 +274,8 @@ void S9xCloseSnapshotFile( STREAM file)
 
 void S9xMessage (int type, int, const char *str)
 {
+	if (!Settings.DisplayHideMessages) return;
+
 #ifdef DEBUGGER
     static FILE *out = NULL;
 

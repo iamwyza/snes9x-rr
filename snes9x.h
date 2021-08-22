@@ -8,7 +8,7 @@
 #define _SNES9X_H_
 
 #ifndef VERSION
-#define VERSION	"1.60"
+#define VERSION	"1.61"
 #endif
 
 #include "port.h"
@@ -252,6 +252,7 @@ struct SSettings
 	bool8	DisplayPressedKeys;
 	bool8	DisplayMovieFrame;
 	bool8	DisplayLagFrame;
+	bool8	DisplayHideMessages;
 	bool8	AutoDisplayMessages;
 	uint32	InitialInfoStringTimeout;
 	uint16	DisplayColor;
