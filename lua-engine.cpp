@@ -1818,6 +1818,16 @@ DEFINE_LUA_FUNCTION(memory_readbyterange, "address,length")
 	return 1;
 }
 
+DEFINE_LUA_FUNCTION(rom_readbyte, "address")
+{
+	int address = lua_tointeger(L, 1);
+
+	uint8 value = (Memory.ROM[address]);
+	lua_settop(L, 0);
+	lua_pushinteger(L, value);
+	return 1; // we return the number of return values
+}
+
 /*DEFINE_LUA_FUNCTION(memory_isvalid, "address")
 {
 	int address = luaL_checkinteger(L,1);
@@ -3998,20 +4008,23 @@ DEFINE_LUA_FUNCTION(emu_openscript, "filename")
 #endif
     return 0;
 }
-/*
+
 DEFINE_LUA_FUNCTION(emu_loadrom, "filename")
 {
 	struct Temp { Temp() {EnableStopAllLuaScripts(false);} ~Temp() {EnableStopAllLuaScripts(true);}} dontStopScriptsHere;
 	const char* filename = lua_isstring(L,1) ? lua_tostring(L,1) : NULL;
 	char curScriptDir[1024]; GetCurrentScriptDir(curScriptDir, 1024);
-	filename = MakeRomPathAbsolute(filename, curScriptDir);
-	int result = GensLoadRom(filename);
+	int result = Memory.LoadROM(filename);
+	Memory.InitROM();
+	S9xReset();
+	Settings.StopEmulation = FALSE;
+
 	if(result <= 0)
 		luaL_error(L, "Failed to load ROM \"%s\": %s", filename, result ? "invalid or unsupported" : "cancelled or not found");
 	CallRegisteredLuaFunctions(LUACALL_ONSTART);
     return 0;
 }
-*/
+
 DEFINE_LUA_FUNCTION(emu_getframecount, "")
 {
 	int offset = 1;
@@ -4557,7 +4570,7 @@ static const struct luaL_reg emulib [] =
 	{"message", emu_message},
 	{"print", print}, // sure, why not
 	{"openscript", emu_openscript},
-//	{"loadrom", emu_loadrom},
+	{"loadrom", emu_loadrom},
 	// alternative names
 //	{"openrom", emu_loadrom},
 	{NULL, NULL}
@@ -4639,6 +4652,9 @@ static const struct luaL_reg memorylib [] =
 	{"register", memory_registerwrite},
 	{"registerrun", memory_registerexec},
 	{"registerexecute", memory_registerexec},
+
+	// ROM Reading
+	{"romreadbyte", rom_readbyte},
 
 	{NULL, NULL}
 };
