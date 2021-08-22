@@ -17,6 +17,7 @@
 #include <string>
 #include <algorithm>
 #include "zlib.h"
+#include "apu/apu.h"
 
 #ifdef __WIN32__
 #include <windows.h>
@@ -1041,7 +1042,47 @@ DEFINE_LUA_FUNCTION(print, "...")
 	return 0;
 }
 
+DEFINE_LUA_FUNCTION(client_getVersion, "")
+{
+	lua_settop(L, 0);
+	lua_pushstring(L, VERSION);
 
+	return 1;
+}
+
+DEFINE_LUA_FUNCTION(client_hideMessages, "[enabled]")
+{
+	LuaContextInfo& info = GetCurrentInfo();
+	if (lua_gettop(L) == 0)
+	{
+		// if no arguments given, return the current value
+		lua_pushboolean(L, Settings.DisplayHideMessages);
+		return 1;
+	}
+	else
+	{
+		// set rerecord disabling
+		Settings.DisplayHideMessages = !lua_toboolean(L, 1);
+		return 0;
+	}
+}
+
+DEFINE_LUA_FUNCTION(client_sound, "[enabled]")
+{
+	LuaContextInfo& info = GetCurrentInfo();
+	if (lua_gettop(L) == 0)
+	{
+		// if no arguments given, return the current value
+		lua_pushboolean(L, !Settings.Mute);
+		return 1;
+	}
+	else
+	{
+		// set rerecord disabling
+		S9xSetSoundMute(!lua_toboolean(L, 1));
+		return 0;
+	}
+}
 
 DEFINE_LUA_FUNCTION(emu_message, "str")
 {
@@ -4015,8 +4056,6 @@ DEFINE_LUA_FUNCTION(emu_loadrom, "filename")
 	const char* filename = lua_isstring(L,1) ? lua_tostring(L,1) : NULL;
 	char curScriptDir[1024]; GetCurrentScriptDir(curScriptDir, 1024);
 	int result = Memory.LoadROM(filename);
-	Memory.InitROM();
-	S9xReset();
 	Settings.StopEmulation = FALSE;
 
 	if(result <= 0)
@@ -4746,6 +4785,14 @@ static const struct luaL_reg movielib [] =
 	{NULL, NULL}
 };
 
+static const struct luaL_reg clientlib[] =
+{
+	{"getVersion", client_getVersion},
+	{ "hideMessages", client_hideMessages},
+	{"sound", client_sound},
+	{NULL, NULL}
+};
+
 static const struct CFuncInfo
 {
 	const char* library;
@@ -4895,6 +4942,7 @@ void registerLibs(lua_State* L)
 	luaL_openlibs(L);
 
 	luaL_register(L, "emu", emulib);
+	luaL_register(L, "client", clientlib);
 	luaL_register(L, "gui", guilib);
 	//luaL_register(L, "stylus", styluslib);
 	luaL_register(L, "savestate", statelib);
@@ -4912,6 +4960,7 @@ void registerLibs(lua_State* L)
 	lua_register(L, "tostring", tostring);
 	lua_register(L, "addressof", addressof);
 	lua_register(L, "copytable", copytable);
+
 
 	// old bit operation functions
 	lua_register(L, "AND", bit_band);
